@@ -1,10 +1,20 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AppointmentModule } from './appointments/appointment.module';
+import { DiagnosisModule } from './diagnosis/diagnosis.module';
+import { PrescriptionModule } from './prescription/prescription.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost/hospital-system'), // kendi Mongo URL’in
+    AuthModule,
+    UsersModule,
+    AppointmentModule,
+    DiagnosisModule,
+    PrescriptionModule,
+  ],
 })
 export class AppModule {}
