@@ -8,6 +8,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+   app.enableCors({
+    origin: 'http://localhost:3001', // frontend adresi
+    credentials: true, // gerekirse
+  });
   await app.listen(3000);
 }
 bootstrap();

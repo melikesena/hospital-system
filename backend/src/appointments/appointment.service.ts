@@ -20,11 +20,13 @@ export class AppointmentService {
   }
 
   async getAppointmentsByDoctor(doctorId: string) {
-    return this.appointmentModel.find({ doctor: doctorId }).populate('patient');
+    return this.appointmentModel.find({ doctor: doctorId }).populate('patient', 'name')
+      .populate('doctor', 'name');
   }
 
   async getAppointmentsByPatient(patientId: string) {
-    return this.appointmentModel.find({ patient: patientId }).populate('doctor');
+    return this.appointmentModel.find({ patient: patientId }).populate('doctor', 'name') 
+      .populate('patient', 'name');
   }
 
   async updateDiagnosisAndPrescription(id: string, diagnosis: string, prescription: string) {
