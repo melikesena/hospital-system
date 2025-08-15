@@ -2,16 +2,17 @@ import { useEffect, useState } from 'react';
 import api from '../api/axiosInstance';
 import { Appointment } from '../types';
 import { useAuth } from '../context/AuthContext';
+import { Card, CardContent, Typography, Stack, CircularProgress } from '@mui/material';
 
 interface Props {
   role: 'doctor' | 'patient';
-  onSelect?: (appointmentId: string) => void; // Yeni prop eklendi
+  onSelect?: (appointmentId: string) => void;
 }
 
 export default function AppointmentList({ role, onSelect }: Props) {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
-  const { userId } = useAuth(); // login olmuş kullanıcı ID'si
+  const { userId } = useAuth();
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -42,32 +43,54 @@ export default function AppointmentList({ role, onSelect }: Props) {
     fetchAppointments();
   }, [role, userId]);
 
-  if (loading) return <p>Loading appointments...</p>;
+  if (loading) return <CircularProgress />;
+
+  if (appointments.length === 0)
+    return <Typography>No appointments found.</Typography>;
 
   return (
-    <div>
-      <h3>Appointments</h3>
-      {appointments.length === 0 && <p>No appointments found.</p>}
-      {appointments.map(a => (
-        <div
-          key={a._id}
-          style={{
-            border: '1px solid #ccc',
-            margin: '5px',
-            padding: '5px',
-            cursor: onSelect ? 'pointer' : 'default', // tıklanabilir
-            backgroundColor: onSelect ? '#f9f9f9' : undefined,
-          }}
-          onClick={() => onSelect && onSelect(a._id)} // tıklama event
-        >
-          <p>Doctor: {typeof a.doctor === 'string' ? a.doctor : a.doctor.name}</p>
-          <p>Patient: {typeof a.patient === 'string' ? a.patient : a.patient.name}</p>
-          <p>Date: {new Date(a.date).toLocaleString()}</p>
-          <p>Status: {a.status}</p>
-          {a.diagnosis && <p>Diagnosis: {a.diagnosis}</p>}
-          {a.prescription && <p>Prescription: {a.prescription}</p>}
-        </div>
-      ))}
-    </div>
+    <Stack spacing={2}>
+      {appointments.map((a) => {
+        const doctorName = typeof a.doctor === 'string' ? a.doctor : a.doctor.name;
+        const patientName = typeof a.patient === 'string' ? a.patient : a.patient.name;
+
+        return (
+          <Card
+            key={a._id}
+            variant="outlined"
+            sx={{
+              cursor: onSelect ? 'pointer' : 'default',
+              '&:hover': { boxShadow: onSelect ? 4 : 0 },
+            }}
+            onClick={() => onSelect && onSelect(a._id)}
+          >
+            <CardContent>
+              <Stack spacing={0.5}>
+                <Typography variant="subtitle1">
+                  Doctor: {doctorName}
+                </Typography>
+                <Typography variant="subtitle1">
+                  Patient: {patientName}
+                </Typography>
+                <Typography variant="body2">
+                  Date: {new Date(a.date).toLocaleString()}
+                </Typography>
+                <Typography variant="body2">Status: {a.status}</Typography>
+                {a.diagnosis && (
+                  <Typography variant="body2">
+                    Diagnosis: {a.diagnosis}
+                  </Typography>
+                )}
+                {a.prescription && (
+                  <Typography variant="body2">
+                    Prescription: {a.prescription}
+                  </Typography>
+                )}
+              </Stack>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </Stack>
   );
 }

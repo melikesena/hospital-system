@@ -1,3 +1,4 @@
+import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,9 +7,19 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <nav style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>
-      <span style={{ marginRight: '10px' }}>Role: {role}</span>
-      <button onClick={() => { logout(); navigate('/'); }}>Logout</button>
-    </nav>
+    <AppBar position="static">
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant="h6">Role: {role}</Typography>
+        <Button
+          color="inherit"
+          onClick={() => {
+            logout();
+            navigate('/');
+          }}
+        >
+          Logout
+        </Button>
+      </Toolbar>
+    </AppBar>
   );
 }

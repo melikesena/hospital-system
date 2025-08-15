@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axiosInstance';
 import { Prescription } from '../types';
+import { Card, CardContent, Typography, Stack, CircularProgress } from '@mui/material';
 
 interface Props {
   appointmentId?: string;
@@ -27,33 +28,45 @@ export default function PrescriptionList({ appointmentId }: Props) {
     fetchData();
   }, [appointmentId]);
 
-  if (loading) return <p>Loading prescriptions...</p>;
+  if (loading)
+    return (
+      <Stack alignItems="center" sx={{ mt: 2 }}>
+        <CircularProgress />
+        <Typography variant="body1" sx={{ mt: 1 }}>
+          Loading prescriptions...
+        </Typography>
+      </Stack>
+    );
+
+  if (prescriptions.length === 0)
+    return (
+      <Typography variant="body1" sx={{ mt: 2 }}>
+        No prescriptions found.
+      </Typography>
+    );
 
   return (
-    <div>
-      <h3>Prescriptions</h3>
-      {prescriptions.length === 0 && <p>No prescriptions found.</p>}
-     {prescriptions.map(p => {
-  const appt = typeof p.appointment === 'object' ? p.appointment : null;
-  const patientName = appt?.patient?.name ?? 'Unknown';
-  const doctorName = appt?.doctor?.name ?? 'Unknown';
-  const date = appt?.date ?? 'Unknown';
+    <Stack spacing={2}>
+      {prescriptions.map((p) => {
+        const appt = typeof p.appointment === 'object' ? p.appointment : null;
+        const patientName = appt?.patient?.name ?? 'Unknown';
+        const doctorName = appt?.doctor?.name ?? 'Unknown';
+        const date = appt?.date ?? 'Unknown';
 
-  return (
-    <div key={p._id} style={{ border: '1px solid #ccc', margin: '5px', padding: '5px' }}>
-      <p>Appointment Date: {date}</p>
-      <p>Patient: {patientName}</p>
-      <p>Doctor: {doctorName}</p>
-      <p>Medicine: {p.medicine}</p>
-      <p>Dosage: {p.dosage || 'N/A'}</p>
-    </div>
-  );
-})}
-
-
-
-
-
-    </div>
+        return (
+          <Card key={p._id} sx={{ p: 2, bgcolor: '#f9f9f9', boxShadow: 1 }}>
+            <CardContent>
+              <Typography variant="subtitle2" color="textSecondary">
+                Appointment Date: {date}
+              </Typography>
+              <Typography variant="body1">Patient: {patientName}</Typography>
+              <Typography variant="body1">Doctor: {doctorName}</Typography>
+              <Typography variant="body1">Medicine: {p.medicine}</Typography>
+              <Typography variant="body1">Dosage: {p.dosage || 'N/A'}</Typography>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </Stack>
   );
 }
