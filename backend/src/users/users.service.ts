@@ -17,6 +17,13 @@ export class UserService {
     return user.save();
   }
 
+  async getAllDoctors(): Promise<User[]> {
+  return this.userModel.find({ role: 'doctor' }).select('_id name').exec();
+}
+
+
+
+
   async addDoctorToPatient(patientId: string, doctorId: string) {
     const patient = await this.userModel.findById(patientId);
     const doctor = await this.userModel.findById(doctorId);

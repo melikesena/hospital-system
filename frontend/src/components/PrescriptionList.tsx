@@ -33,15 +33,27 @@ export default function PrescriptionList({ appointmentId }: Props) {
     <div>
       <h3>Prescriptions</h3>
       {prescriptions.length === 0 && <p>No prescriptions found.</p>}
-      {prescriptions.map(p => (
-  <div key={p._id} style={{ border: '1px solid #ccc', margin: '5px', padding: '5px' }}>
-    <p>
-      Appointment ID: {typeof p.appointment === 'string' ? p.appointment : p.appointment._id}
-    </p>
-    <p>Medicine: {p.medicine}</p>
-    <p>Dosage: {p.dosage}</p>
-  </div>
-))}
+     {prescriptions.map(p => {
+  const appt = typeof p.appointment === 'object' ? p.appointment : null;
+  const patientName = appt?.patient?.name ?? 'Unknown';
+  const doctorName = appt?.doctor?.name ?? 'Unknown';
+  const date = appt?.date ?? 'Unknown';
+
+  return (
+    <div key={p._id} style={{ border: '1px solid #ccc', margin: '5px', padding: '5px' }}>
+      <p>Appointment Date: {date}</p>
+      <p>Patient: {patientName}</p>
+      <p>Doctor: {doctorName}</p>
+      <p>Medicine: {p.medicine}</p>
+      <p>Dosage: {p.dosage || 'N/A'}</p>
+    </div>
+  );
+})}
+
+
+
+
+
     </div>
   );
 }

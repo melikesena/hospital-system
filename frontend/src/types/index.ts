@@ -10,19 +10,33 @@ export interface Appointment {
 }
 export interface Diagnosis {
   _id: string;
-  appointment: string | { _id: string }; // appointmentId
+  appointment: 
+    | string
+    | {
+        _id: string;
+        date?: string;
+        doctor?: { _id: string; name: string };
+        patient?: { _id: string; name: string };
+      };
   text: string;
   doctor: string;
 }
+
 export interface Prescription {
   _id: string;
-  appointment: string | { _id: string }; // appointmentId
+  appointment: {
+    _id: string;
+    date?: string;
+    patient?: { name: string };
+    doctor?: { name: string };
+  } | string;
   doctor: string;
   medicine: string;
   dosage: string;
   createdAt?: string;
   updatedAt?: string;
 }
+
 export interface User {
   _id: string;
   name: string;

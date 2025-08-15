@@ -30,8 +30,9 @@ export class DiagnosisController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('appointment/:id')
-  async getByAppointment(@Param('id') id: string) {
-    return this.diagnosisService.getByAppointment(id);
-  }
+  @Get('appointment/:appointmentId')
+  async getByAppointment(@Param('appointmentId') appointmentId: string) {
+    return this.diagnosisService.getByAppointment(appointmentId);
+}
+
 }

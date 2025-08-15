@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'; 
+import { useEffect, useState } from 'react';
 import api from '../api/axiosInstance';
 import { Diagnosis } from '../types';
 
@@ -17,7 +17,8 @@ export default function DiagnosisList({ appointmentId }: Props) {
         const url = appointmentId ? `/diagnosis/appointment/${appointmentId}` : '/diagnosis/doctor';
         const res = await api.get<Diagnosis[]>(url);
 
-        const data = Array.isArray(res.data) ? res.data : [res.data];
+        // Always ensure we have an array
+        const data: Diagnosis[] = Array.isArray(res.data) ? res.data : [res.data];
         setDiagnoses(data);
       } catch (err) {
         console.error('Failed to fetch diagnoses', err);
@@ -26,6 +27,7 @@ export default function DiagnosisList({ appointmentId }: Props) {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [appointmentId]);
 
@@ -35,13 +37,21 @@ export default function DiagnosisList({ appointmentId }: Props) {
   return (
     <div>
       <h3>Diagnoses</h3>
-      {diagnoses.map(d => (
-        <div key={d._id} style={{ border: '1px solid #ccc', margin: '5px', padding: '5px' }}>
-          <p>Appointment ID: {typeof d.appointment === 'object' ? d.appointment._id : d.appointment}</p>
-          <p>Doctor ID: {d.doctor}</p>
-          <p>Text: {d.text}</p>
-        </div>
-      ))}
+      {diagnoses.map(d => {
+        const appt = typeof d.appointment === 'object' ? d.appointment : null;
+        const doctorName = appt?.doctor && typeof appt.doctor === 'object' ? appt.doctor.name : 'Unknown';
+        const patientName = appt?.patient && typeof appt.patient === 'object' ? appt.patient.name : 'Unknown';
+        const date = appt?.date || 'Unknown';
+
+        return (
+          <div key={d._id} style={{ border: '1px solid #ccc', margin: '5px', padding: '5px' }}>
+            <p>Appointment Date: {date}</p>
+            <p>Patient: {patientName}</p>
+            <p>Doctor: {doctorName}</p>
+            <p>Text: {d.text}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

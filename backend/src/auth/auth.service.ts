@@ -42,7 +42,8 @@ export class AuthService {
   };
 }
 
-  async login(email: string, password: string): Promise<AuthResponse> {
+
+/*******  2ec8eee6-8e91-4831-87ec-3e4324974fdd  *******/  async login(email: string, password: string): Promise<AuthResponse> {
     const user = (await this.userModel.findOne({ email }).exec()) as UserDocument;
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
@@ -56,6 +57,7 @@ export class AuthService {
         sub: userId,
         email: user.email,
         role: user.role,
+        name: user.name,
       }),
     };
   }

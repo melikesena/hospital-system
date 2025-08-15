@@ -15,7 +15,7 @@ const DoctorDashboard: React.FC = () => {
   const [prescriptionDosage, setPrescriptionDosage] = useState('');
   const [patientId, setPatientId] = useState('');
 
-  // Bağımsız işlemler
+  // Bağımsız formlar için işlevler
   const handleAddDiagnosis = async () => {
     if (!appointmentId || !diagnosisText) return alert('Fill all fields');
     try {
@@ -76,28 +76,30 @@ const DoctorDashboard: React.FC = () => {
 
       {/* Randevu listesi */}
       <h3>Your Appointments</h3>
-      <AppointmentList role="doctor" />
+      <AppointmentList role="doctor" onSelect={setSelectedAppointment} />
 
       {/* Seçilen randevuya bağlı işlemler */}
       {selectedAppointment && (
         <div style={{ borderTop: '1px solid #ccc', paddingTop: '20px', marginTop: '20px' }}>
-          <h3>Add Diagnosis to Selected Appointment</h3>
+          <h3>Selected Appointment: {selectedAppointment}</h3>
+
+          <h4>Add Diagnosis</h4>
           <DiagnosisForm
             appointmentId={selectedAppointment}
-            onSuccess={() => setSelectedAppointment(null)}
+            onSuccess={() => setSelectedAppointment(selectedAppointment)}
           />
 
-          <h3>Diagnoses</h3>
+          <h4>Diagnoses</h4>
           <DiagnosisList appointmentId={selectedAppointment} />
 
-          <h3>Add Prescription to Selected Appointment</h3>
+          <h4>Add Prescription</h4>
           <PrescriptionForm
             appointmentId={selectedAppointment}
-            onSuccess={() => setSelectedAppointment(null)}
+            onSuccess={() => setSelectedAppointment(selectedAppointment)}
           />
 
-          <h3>Prescriptions</h3>
-          <PrescriptionList appointmentId={selectedAppointment} />
+          <h4>Prescriptions</h4>
+          <PrescriptionList appointmentId={selectedAppointment || ''} />
         </div>
       )}
 

@@ -22,25 +22,33 @@ export class DiagnosisService {
       throw new ForbiddenException('You can only add diagnosis to your own appointment');
     }
 
-    // Yeni diagnosis yarat, appointment zaten var
+    // Yeni diagnosis yarat
     const diagnosis = new this.diagnosisModel({
       appointment: appt._id,
       doctor: doctorId,
       text,
     });
 
-    return diagnosis.save(); // burada artık appointment create edilmiyor
+    await diagnosis.save();
+
+    // Kaydettikten sonra populate ile geri döndür
+    return this.diagnosisModel
+      .findById(diagnosis._id)
+      .populate({ path: 'appointment', populate: [{ path: 'doctor' }, { path: 'patient' }] })
+      .exec();
   }
 
   async getByDoctor(doctorId: string) {
     return this.diagnosisModel
       .find({ doctor: doctorId })
-      .populate({ path: 'appointment', populate: [{ path: 'patient' }, { path: 'doctor' }] });
+      .populate({ path: 'appointment', populate: [{ path: 'patient' }, { path: 'doctor' }] })
+      .exec();
   }
 
   async getByAppointment(appointmentId: string) {
     return this.diagnosisModel
       .find({ appointment: appointmentId })
-      .populate({ path: 'doctor' });
+      .populate({ path: 'appointment', populate: [{ path: 'doctor' }, { path: 'patient' }] })
+      .exec();
   }
 }

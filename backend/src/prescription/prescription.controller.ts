@@ -52,4 +52,17 @@ export class PrescriptionController {
 
     return this.prescriptionService.getByAppointment(appointmentId);
   }
+
+  // GET /prescriptions/patient/:patientId
+@Get('patient/:patientId')
+async byPatient(@Req() req: JwtRequest, @Param('patientId') patientId: string) {
+  if (req.user.role !== 'patient' || req.user.userId !== patientId) {
+    throw new ForbiddenException('Not allowed to view this patient prescriptions');
+  }
+
+  return this.prescriptionService.getByPatient(patientId);
+}
+
+
+
 }

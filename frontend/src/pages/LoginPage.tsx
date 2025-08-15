@@ -17,10 +17,10 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post<AuthResponse>('/auth/login', { email, password }); // <- generic tipi eklendi
+      const res = await api.post<AuthResponse>('/auth/login', { email, password });
       const token = res.data.access_token;
       const payload = JSON.parse(atob(token.split('.')[1]));
-      login(token, payload.role);
+      login(token, payload.role, payload.name); // artık userId JWT’den alınıyor
       if (payload.role === 'doctor') navigate('/doctor');
       else navigate('/patient');
     } catch (err: any) {

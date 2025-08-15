@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 // user.controller.ts
-import { Controller, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get } from '@nestjs/common';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -17,4 +17,11 @@ export class UserController {
   addDoctorToPatient(@Param('patientId') patientId: string, @Param('doctorId') doctorId: string) {
     return this.userService.addDoctorToPatient(patientId, doctorId);
   }
+
+  @Get('doctors')
+  getAllDoctors() {
+    return this.userService.getAllDoctors();
+  }
+
+  
 }
