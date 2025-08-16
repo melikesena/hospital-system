@@ -15,7 +15,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 @Post('register')
 async register(@Body() createUserDto: CreateUserDto): Promise<{ access_token: string }> {
-  return this.authService.register(createUserDto); // artık DTO tek parametre
+  return this.authService.register(createUserDto); 
 }
 
   @Post('login')

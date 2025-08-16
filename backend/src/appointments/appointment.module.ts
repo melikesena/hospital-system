@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-// backend/src/appointments/appointment.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './schemas/appointment.schema';
@@ -10,6 +9,6 @@ import { AppointmentController } from './appointment.controller';
   imports: [MongooseModule.forFeature([{ name: Appointment.name, schema: AppointmentSchema }])],
   providers: [AppointmentService],
   controllers: [AppointmentController],
-  exports: [AppointmentService], // gerekiyorsa export et
+  exports: [AppointmentService], 
 })
-export class AppointmentModule {} // <<< bu kesinlikle export edilmeli
+export class AppointmentModule {} 

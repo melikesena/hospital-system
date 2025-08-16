@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-// appointment.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -24,6 +23,9 @@ export class Appointment {
 
   @Prop()
   prescription?: string;
+
+  @Prop({ type: [{ filename: String, url: String }], default: [] })
+  mriFiles: { filename: string; url: string }[];
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

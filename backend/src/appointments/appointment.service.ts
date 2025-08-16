@@ -6,6 +6,7 @@ import { Model} from 'mongoose';
 import { Appointment, AppointmentDocument } from './schemas/appointment.schema';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 
+
 @Injectable()
 export class AppointmentService {
   constructor(@InjectModel(Appointment.name) private appointmentModel: Model<AppointmentDocument>) {}
@@ -36,4 +37,17 @@ export class AppointmentService {
       { new: true }
     );
   }
+  async addMRI(appointmentId: string, file: { filename: string; url: string }) {
+  const appointment = await this.appointmentModel.findById(appointmentId);
+  if (!appointment) throw new Error('Appointment not found');
+
+  (appointment.mriFiles as { filename: string; url: string }[]).push(file);
+
+  await appointment.save();
+  return appointment;
+}
+
+  
+
+
 }

@@ -14,6 +14,8 @@ import DiagnosisForm from '../components/DiagnosisForm';
 import DiagnosisList from '../components/DiagnosisList';
 import PrescriptionForm from '../components/PrescriptionForm';
 import PrescriptionList from '../components/PrescriptionList';
+import MriForm from '../components/MriForm';
+import MriList from '../components/MriList';
 
 const DoctorDashboard: React.FC = () => {
   const [selectedAppointment, setSelectedAppointment] = useState<string | null>(null);
@@ -63,6 +65,18 @@ const DoctorDashboard: React.FC = () => {
                         onSuccess={() => setSelectedAppointment(selectedAppointment)}
                       />
                     </Card>
+
+                     <Card sx={{ p: 2, bgcolor: '#f9f9f9' }}>
+                      <Typography variant="h6" gutterBottom>
+                        Add MRI
+                      </Typography>
+                      <MriForm
+                        appointmentId={selectedAppointment}
+                        onSuccess={() => setSelectedAppointment(selectedAppointment)}
+                      />
+                    </Card>
+
+
                   </Stack>
                 </Grid>
 
@@ -82,6 +96,14 @@ const DoctorDashboard: React.FC = () => {
                       </Typography>
                       <PrescriptionList appointmentId={selectedAppointment} />
                     </Card>
+
+                    <Card sx={{ p: 2 }}>
+                      <Typography variant="h6" gutterBottom>
+                        MRI Files
+                      </Typography>
+                      <MriList appointmentId={selectedAppointment} />
+                    </Card>
+                    
                   </Stack>
                 </Grid>
               </Grid>

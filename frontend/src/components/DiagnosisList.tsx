@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axiosInstance';
 import { Diagnosis } from '../types';
+import { Card, CardContent, Typography, Stack, CircularProgress } from '@mui/material';
 
 interface Props {
   appointmentId?: string;
@@ -12,14 +13,14 @@ export default function DiagnosisList({ appointmentId }: Props) {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!appointmentId) return setDiagnoses([]);
+
       setLoading(true);
       try {
-        const url = appointmentId ? `/diagnosis/appointment/${appointmentId}` : '/diagnosis/doctor';
-        const res = await api.get<Diagnosis[]>(url);
-
-        // Always ensure we have an array
-        const data: Diagnosis[] = Array.isArray(res.data) ? res.data : [res.data];
-        setDiagnoses(data);
+        const res = await api.get<Diagnosis[]>(`/diagnosis/doctor`);
+        // appointment._id ile filtreleme
+        const filtered = res.data.filter(d => d.appointment && d.appointment._id === appointmentId);
+        setDiagnoses(filtered);
       } catch (err) {
         console.error('Failed to fetch diagnoses', err);
         setDiagnoses([]);
@@ -31,27 +32,44 @@ export default function DiagnosisList({ appointmentId }: Props) {
     fetchData();
   }, [appointmentId]);
 
-  if (loading) return <p>Loading diagnoses...</p>;
-  if (!diagnoses.length) return <p>No diagnoses found.</p>;
+  if (loading)
+    return (
+      <Stack alignItems="center" sx={{ mt: 2 }}>
+        <CircularProgress />
+        <Typography variant="body1" sx={{ mt: 1 }}>
+          Loading diagnoses...
+        </Typography>
+      </Stack>
+    );
+
+  if (diagnoses.length === 0)
+    return (
+      <Typography variant="body1" sx={{ mt: 2 }}>
+        No diagnoses found for this appointment.
+      </Typography>
+    );
 
   return (
-    <div>
-      <h3>Diagnoses</h3>
-      {diagnoses.map(d => {
-        const appt = typeof d.appointment === 'object' ? d.appointment : null;
-        const doctorName = appt?.doctor && typeof appt.doctor === 'object' ? appt.doctor.name : 'Unknown';
-        const patientName = appt?.patient && typeof appt.patient === 'object' ? appt.patient.name : 'Unknown';
-        const date = appt?.date || 'Unknown';
+    <Stack spacing={2}>
+      {diagnoses.map((d) => {
+        const appt = d.appointment;
+        const patientName = appt?.patient?.name ?? 'Unknown';
+        const doctorName = appt?.doctor?.name ?? 'Unknown';
+        const date = appt?.date ? new Date(appt.date).toLocaleString() : 'Unknown';
 
         return (
-          <div key={d._id} style={{ border: '1px solid #ccc', margin: '5px', padding: '5px' }}>
-            <p>Appointment Date: {date}</p>
-            <p>Patient: {patientName}</p>
-            <p>Doctor: {doctorName}</p>
-            <p>Text: {d.text}</p>
-          </div>
+          <Card key={d._id} sx={{ p: 2, bgcolor: '#f9f9f9', boxShadow: 1 }}>
+            <CardContent>
+              <Typography variant="subtitle2" color="textSecondary">
+                Appointment Date: {date}
+              </Typography>
+              <Typography variant="body1">Patient: {patientName}</Typography>
+              <Typography variant="body1">Doctor: {doctorName}</Typography>
+              <Typography variant="body1">Diagnosis: {d.text}</Typography>
+            </CardContent>
+          </Card>
         );
       })}
-    </div>
+    </Stack>
   );
 }

@@ -9,7 +9,7 @@ import { PrescriptionModule } from './prescription/prescription.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/hospital-system'), // kendi Mongo URL’in
+    MongooseModule.forRoot('mongodb://localhost/hospital-system'), 
     AuthModule,
     UsersModule,
     AppointmentModule,

@@ -9,17 +9,16 @@ export interface Appointment {
   prescription?: string;
 }
 export interface Diagnosis {
-  _id: string;
-  appointment: 
-    | string
-    | {
-        _id: string;
-        date?: string;
-        doctor?: { _id: string; name: string };
-        patient?: { _id: string; name: string };
-      };
-  text: string;
+ _id: string;
+  appointment: {
+    _id: string;
+    date?: string;
+    doctor?: { _id: string; name: string };
+    patient?: { _id: string; name: string };
+  };
   doctor: string;
+  text: string;
+  createdAt?: string;
 }
 
 export interface Prescription {

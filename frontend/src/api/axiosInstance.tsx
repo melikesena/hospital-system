@@ -4,10 +4,10 @@ const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000', // Backend portu
 });
 
-axiosInstance.interceptors.request.use((config: any) => { // <--- any kullan
+axiosInstance.interceptors.request.use((config: any) => { 
   const token = localStorage.getItem('token');
 
-  // headers varsa kullan, yoksa boş obje oluştur
+  
   config.headers = config.headers || {};
 
   if (token) {
